@@ -1,6 +1,6 @@
 ## Description
 
-We implement the modified TPC-C benchmark based on the [Benchbase](https://github.com/cmu-db/benchbase) framework to replace TPC-C with the modified version. We also change related source files to make the modified TPC-C benchmark work correctly.
+We implement the modified TPC-C benchmark based on the [Benchbase](https://github.com/cmu-db/benchbase) framework to replace TPC-C with the modified version. We also change related source files to make the modified TPC-C benchmark work.
 
 ---
 
