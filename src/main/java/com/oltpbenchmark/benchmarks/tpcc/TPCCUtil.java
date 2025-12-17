@@ -103,17 +103,6 @@ public class TPCCUtil {
         return nonUniformRandom(8191, OL_I_ID_C, 1, configItemCount, r);
     }
 
-    public static int getItemIDFromSkew(Random r, int w_id) {
-        // Dynamically calculate A based on the number of items per warehouse.
-        // Previously, A was 8191 for 100,000 items.
-        int numItems = TPCCLoader.getNumItemsPerWarehouse().get(w_id);
-        int A = (int) Math.round(8191.0 * numItems / configItemCount);
-        int ol_i_id_c = (int) Math.round(OL_I_ID_C * (A / 8191.0));
-        int idxItem = nonUniformRandom(A, ol_i_id_c, 1, numItems, r);
-        // get the item ID based on the warehouse ID and the index
-        return TPCCLoader.getItemIdsPerWarehouse().get(w_id).get(idxItem - 1);
-    }
-
     public static int getCustomerID(Random r) {
         return nonUniformRandom(1023, C_ID_C, 1, configCustPerDist, r);
     }

@@ -97,13 +97,6 @@ public class Delivery extends TPCCProcedure {
                 continue;
             }
 
-            Integer ol_exists = checkOLExists(conn, w_id, d_id, no_o_id);
-            if (ol_exists == null) {
-                LOG.warn(String.format("This order has no order line [W_ID=%d, D_ID=%d, O_ID=%d]", w_id, d_id, no_o_id));
-                String msg = String.format("No order line exists for this order. [w_id=%d, d_id=%d, o_id=%d]", w_id, d_id, no_o_id);
-                throw new UserAbortException(msg);
-            }
-
             orderIDs[d_id - 1] = no_o_id;
 
             deleteOrder(conn, w_id, d_id, no_o_id);
@@ -162,35 +155,6 @@ public class Delivery extends TPCCProcedure {
                 }
 
                 return rs.getInt("NO_O_ID");
-
-            }
-        }
-    }
-
-    private Integer checkOLExists(Connection conn, int w_id, int d_id, int no_o_id) throws SQLException {
-
-        SQLStmt delivCheckOLExistsSQL = new SQLStmt(
-            "SELECT 1 AS one FROM " + TPCCConstants.TABLENAME_ORDERLINE +
-            " WHERE OL_O_ID = ? " +
-            "AND OL_D_ID = ? " +
-            "AND OL_W_ID = ? " +
-            "LIMIT 1"
-        );
-
-        try (PreparedStatement delivCheckOLExists = this.getPreparedStatement(conn, delivCheckOLExistsSQL)) {
-            delivCheckOLExists.setInt(1, no_o_id);
-            delivCheckOLExists.setInt(2, d_id);
-            delivCheckOLExists.setInt(3, w_id);
-
-            try (ResultSet rs = delivCheckOLExists.executeQuery()) {
-
-                if (!rs.next()) {
-                    // This new order has no order line records. Skip it.
-                    // LOG.warn(String.format("New order has no order line records [W_ID=%d, D_ID=%d, O_ID=%d]", w_id, d_id, no_o_id));
-                    return null;
-                }
-
-                return rs.getInt("one");
 
             }
         }

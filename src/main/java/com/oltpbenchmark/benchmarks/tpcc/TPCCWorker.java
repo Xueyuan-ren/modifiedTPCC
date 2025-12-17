@@ -22,6 +22,7 @@ import com.oltpbenchmark.api.Procedure.UserAbortException;
 import com.oltpbenchmark.api.TransactionType;
 import com.oltpbenchmark.api.Worker;
 import com.oltpbenchmark.benchmarks.tpcc.procedures.TPCCProcedure;
+import com.oltpbenchmark.distributions.ZipfianGenerator;
 import com.oltpbenchmark.types.TransactionStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,7 @@ public class TPCCWorker extends Worker<TPCCBenchmark> {
     private final int terminalDistrictLowerID;
     private final int terminalDistrictUpperID;
     private final Random gen = new Random();
+    private final ZipfianGenerator zipfianGen;
 
     private final int numWarehouses;
 
@@ -53,7 +55,7 @@ public class TPCCWorker extends Worker<TPCCBenchmark> {
         this.terminalDistrictLowerID = terminalDistrictLowerID;
         this.terminalDistrictUpperID = terminalDistrictUpperID;
 
-
+        this.zipfianGen = new ZipfianGenerator(rng(), 1, TPCCConfig.configItemCount, TPCCConfig.ZIPFIAN_SKEW_FACTOR);
         this.numWarehouses = numWarehouses;
     }
 
@@ -92,6 +94,10 @@ public class TPCCWorker extends Worker<TPCCBenchmark> {
         }
 
         return thinkTime;
+    }
+
+    public ZipfianGenerator getZipfianGenerator() {
+        return this.zipfianGen;
     }
 
 }

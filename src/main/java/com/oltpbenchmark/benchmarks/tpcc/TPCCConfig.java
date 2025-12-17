@@ -38,4 +38,7 @@ public final class TPCCConfig {
      * An invalid item id used to rollback a new order transaction.
      */
     public static final int INVALID_ITEM_ID = -12345;
+
+    // Zipfian distribution skew factor
+    public final static double ZIPFIAN_SKEW_FACTOR = 0.99;
 }

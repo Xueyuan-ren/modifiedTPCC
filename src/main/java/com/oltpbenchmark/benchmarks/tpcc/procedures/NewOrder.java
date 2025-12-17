@@ -104,33 +104,25 @@ public class NewOrder extends TPCCProcedure {
         int[] supplierWarehouseIDs = new int[numItems];
         int[] orderQuantities = new int[numItems];
         int allLocal = 1;
-        // boolean isSkewed = TPCCLoader.getZipfDistribution() != null;
-
+        
         for (int i = 0; i < numItems; i++) {
             // nonuniform distribution: default
-            // itemIDs[i] = TPCCUtil.getItemID(gen);
+            itemIDs[i] = TPCCUtil.getItemID(gen);
+            // zipfian distribution (default skew factor s=0.99)
+            // itemIDs[i] = w.getZipfianGenerator().nextInt();
             // uniform distribution
-            itemIDs[i] = (int) (gen.nextDouble() * (100000 - 1) + 1);
+            // itemIDs[i] = (int) (gen.nextDouble() * (100000 - 1) + 1);
+            
             if (TPCCUtil.randomNumber(1, 100, gen) > 1) {
-                supplierWarehouseIDs[i] = terminalWarehouseID; // local warehouse
+                supplierWarehouseIDs[i] = terminalWarehouseID;
             } else {
                 do {
                     supplierWarehouseIDs[i] = TPCCUtil.randomNumber(1, numWarehouses, gen);
-                } while (supplierWarehouseIDs[i] == terminalWarehouseID && numWarehouses > 1);
+                }
+                while (supplierWarehouseIDs[i] == terminalWarehouseID && numWarehouses > 1);
                 allLocal = 0;
             }
             orderQuantities[i] = TPCCUtil.randomNumber(1, 10, gen);
-
-            // if (!isSkewed) {
-                // generate item IDs non-uniformly based on default item count
-                // nonuniform distribution: default
-                // itemIDs[i] = TPCCUtil.getItemID(gen);
-                // uniform distribution
-                //itemIDs[i] = (int) (gen.nextDouble() * (100000 - 1) + 1);
-            // } else {
-            //     // generate item IDs non-uniformly based on skewed item count
-            //     itemIDs[i] = TPCCUtil.getItemIDFromSkew(gen, supplierWarehouseIDs[i]);
-            // }
         }
 
         // we need to cause 1% of the new orders to be rolled back.
